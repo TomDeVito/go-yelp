@@ -15,11 +15,13 @@ const (
 	rootURI      = "http://api.yelp.com/"
 	businessArea = "/v2/business"
 	searchArea   = "/v2/search"
+	phoneSearch  = "/v2/phone_search"
 )
 
 var (
 	errUnspecifiedLocation = errors.New("location must be specified")
 	errBusinessNotFound    = errors.New("business not found")
+	errPhoneNumberNotFound = errors.New("phone number not found")
 )
 
 // AuthOptions provide keys required for using the Yelp API.  Find more
@@ -90,6 +92,24 @@ func (client *Client) GetBusiness(name string) (result Business, err error) {
 	return result, nil
 }
 
+// GetBusinessByPhoneSearch obtains businesses by phone number.
+func (client *Client) GetBusinessByPhoneSearch(options PhoneSearchOptions) (result SearchResult, err error) {
+	// get the options from the phone search provider
+	params, err := options.getParameters()
+	if err != nil {
+		return SearchResult{}, err
+	}
+
+	statusCode, err := client.makeRequest(phoneSearch, "", params, &result)
+	if err != nil {
+		if statusCode == 404 {
+			return SearchResult{}, errPhoneNumberNotFound
+		}
+		return SearchResult{}, err
+	}
+	return result, nil
+}
+
 // makeRequest is an internal/private API used to make underlying requests to the Yelp API.
 func (client *Client) makeRequest(area string, id string, params map[string]string, v interface{}) (statusCode int, err error) {
 
@@ -142,6 +162,7 @@ func (client *Client) makeRequest(area string, id string, params map[string]stri
 	}
 
 	err = json.NewDecoder(response.Body).Decode(v)
+
 	return response.StatusCode, err
 }
 
