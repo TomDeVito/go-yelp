@@ -16,17 +16,17 @@ type PhoneOptions struct {
 // that match the defined values.
 func (o *PhoneOptions) getParameters() (params map[string]string, err error) {
 	params = make(map[string]string)
-	if o.phone == "" {
+	if o.Phone == "" {
 		return params, errors.New("to perform a search for a business by phone number, the phone property must be specified")
 	}
-	params["phone"] = o.phone
+	params["phone"] = o.Phone
 
-	if o.cc != "" {
-		params["cc"] = o.cc
+	if o.CC != "" {
+		params["cc"] = o.CC
 	}
 
-	if o.category != "" {
-		params["category"] = o.category
+	if o.Category != "" {
+		params["category"] = o.Category
 	}
 
 	return params, nil
