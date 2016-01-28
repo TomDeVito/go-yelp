@@ -113,7 +113,7 @@ type Location struct {
 
 // Business information is returned in full from the business API, or shallow from the search API.
 type Business struct {
-	ID                string            `json:"id" gorethink:"id" `                      // Yelp ID for this business
+	ID                string            `json:"id" gorethink:"business_id" `                      // Yelp ID for this business
 	Name              string            `json:"name" gorethink:"name"`                   // Name of this business
 	ImageURL          string            `json:"Image_URL" gorethink:"Image_URL"`         // URL of photo for this business
 	URL               string            `json:"business_url" gorethink:"business_url"`   // URL for business page on Yelp
